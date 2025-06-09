@@ -3,7 +3,8 @@
 #
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
-#from distributed import init_distributed
+
+from distributed import init_distributed
 import torch
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
@@ -12,6 +13,7 @@ import yaml
 import argparse
 import os
 import numpy as np
+from tqdm import tqdm
 
 from diffusion import create_diffusion
 from diffusers.models import AutoencoderKL
@@ -202,7 +204,7 @@ def main(args):
         os.makedirs(dataset_save_output_dir, exist_ok=True)
         curr_data_loader = datasets[dataset_name]
         
-        for data_iter_step, (idxs, obs_image, gt_image, delta) in enumerate(metric_logger.log_every(curr_data_loader, print_freq, header)):
+        for data_iter_step, (idxs, obs_image, gt_image, delta) in enumerate(tqdm(curr_data_loader, desc=f"Processing {dataset_name}", total=len(curr_data_loader))):
             with torch.amp.autocast('cuda', enabled=True, dtype=torch.bfloat16):
                 obs_image = obs_image[:, -num_cond:].to(device)
                 gt_image = gt_image.to(device)

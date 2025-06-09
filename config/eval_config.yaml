@@ -30,6 +30,6 @@ eval_datasets:
     test: data_splits/scand/test
     goals_per_obs: 4
   go_stanford:
-    data_folder: /checkpoint/amaia/video/amirbar/processed_datasets/go_stanford
+    data_folder: data/go_stanford
     test: data_splits/go_stanford/test/
     goals_per_obs: 4
